@@ -1,0 +1,342 @@
+/* ============================================================
+   МОДАЛЬНОЕ ОКНО ЗАПИСИ + КНОПКА «ЗАПИСАТЬСЯ» В HEADER
+   Mobile-first: базовые стили — для 375–414px,
+   адаптация под десктоп — через @media (min-width: 768px).
+   ============================================================ */
+
+/* ---------- Правая группа header: кнопка + гамбургер ---------- */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ---------- Кнопка «Записаться» в header ---------- */
+/* Мобильный (по умолчанию): компактная круглая иконка «+»,
+   чтобы header на 375px не переполнялся */
+.header-signup-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ff8c69; /* коралловый акцент проекта (как .highlight / .btn-primary) */
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.header-signup-btn:hover {
+  background: #ff7043;
+  transform: translateY(-1px);
+}
+
+/* Иконка «+» (видна только на мобильном) */
+.header-signup-btn .signup-icon {
+  font-size: 22px;
+  line-height: 1;
+  /* оптическая центровка плюса */
+  margin-top: -2px;
+}
+
+/* Текст кнопки (виден только на десктопе) */
+.header-signup-btn .signup-text {
+  display: none;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .header-actions {
+    gap: 16px;
+  }
+
+  .header-signup-btn {
+    width: auto;
+    height: auto;
+    padding: 10px 22px;
+    border-radius: 24px;
+  }
+
+  .header-signup-btn .signup-icon {
+    display: none;
+  }
+
+  .header-signup-btn .signup-text {
+    display: inline;
+  }
+}
+
+/* ---------- Оверлей модалки ---------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.6);
+  z-index: 200; /* выше header (100) и whatsapp-btn (98) */
+  display: flex;
+  justify-content: center;
+  /* мобильный: шторка снизу */
+  align-items: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Блокировка скролла страницы, когда модалка открыта */
+body.modal-open {
+  overflow: hidden;
+}
+
+/* ---------- Окно модалки ---------- */
+/* Мобильный: шторка снизу почти на весь экран */
+.modal-window {
+  position: relative;
+  background: white;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  border-radius: 20px 20px 0 0;
+  padding: 24px 20px 30px;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-window {
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .modal-overlay {
+    align-items: center; /* десктоп: по центру экрана */
+    padding: 20px;
+  }
+
+  .modal-window {
+    max-width: 480px;
+    max-height: 90vh;
+    border-radius: 20px;
+    padding: 30px 30px 34px;
+    transform: translateY(20px);
+  }
+}
+
+/* ---------- Крестик закрытия ---------- */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #eef1f6;
+  color: #1a2f5c;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: #dde3ec;
+}
+
+/* ---------- Заголовок ---------- */
+.modal-title {
+  font-size: 22px;
+  color: #1a2f5c;
+  margin-bottom: 20px;
+  padding-right: 40px; /* чтобы не залезал под крестик */
+}
+
+/* ---------- Поля формы ---------- */
+.modal-field {
+  margin-bottom: 14px;
+}
+
+.modal-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  color: #1a2f5c;
+  margin-bottom: 6px;
+}
+
+.modal-field .required-mark {
+  color: #ff7043;
+}
+
+.modal-field input[type="text"],
+.modal-field input[type="tel"],
+.modal-field input[type="number"],
+.modal-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  font-size: 16px; /* ≥16px — iOS не зумит поле при фокусе */
+  font-family: inherit;
+  color: #1a2f5c;
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.modal-field input:focus,
+.modal-field textarea:focus {
+  outline: none;
+  border-color: #ff8c69;
+}
+
+.modal-field textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Поле с ошибкой */
+.modal-field.has-error input,
+.modal-field.has-error textarea {
+  border-color: #e57373;
+}
+
+/* Текст подсказки об ошибке под полем */
+.field-error {
+  display: none;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #d32f2f;
+}
+
+.modal-field.has-error .field-error {
+  display: block;
+}
+
+/* ---------- Чекбокс согласия ---------- */
+.modal-consent {
+  margin: 18px 0;
+}
+
+.modal-consent .consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #555;
+  cursor: pointer;
+}
+
+.modal-consent input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  accent-color: #ff8c69;
+  cursor: pointer;
+}
+
+.modal-consent a {
+  color: #1a2f5c;
+  font-weight: bold;
+}
+
+.modal-consent.has-error .consent-label {
+  color: #d32f2f;
+}
+
+.modal-consent .field-error {
+  margin-left: 28px;
+}
+
+.modal-consent.has-error .field-error {
+  display: block;
+}
+
+/* ---------- Кнопка «Отправить» ---------- */
+.modal-submit {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: #ff8c69;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.modal-submit:hover {
+  background: #ff7043;
+  transform: translateY(-2px);
+}
+
+/* ---------- Экран успеха ---------- */
+.modal-success {
+  display: none;
+  text-align: center;
+  padding: 20px 0 10px;
+}
+
+.modal-success.visible {
+  display: block;
+}
+
+/* Когда показан успех — форма и заголовок скрываются */
+.modal-window.success-state .modal-title,
+.modal-window.success-state .modal-form {
+  display: none;
+}
+
+.modal-success-icon {
+  font-size: 44px;
+  margin-bottom: 14px;
+}
+
+.modal-success-text {
+  font-size: 17px;
+  line-height: 1.5;
+  color: #1a2f5c;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+.modal-whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: #25d366; /* фирменный зелёный WhatsApp */
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.modal-whatsapp-btn:hover {
+  background: #1fb857;
+  transform: translateY(-2px);
+}
+
+.modal-whatsapp-btn img {
+  width: 22px;
+  height: 22px;
+}
